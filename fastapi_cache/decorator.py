@@ -88,7 +88,7 @@ def cache(
     expire: Optional[int] = None,
     coder: Optional[Type[Coder]] = None,
     key_builder: Optional[KeyBuilder] = None,
-    cache_status_header: str = "X-Fastapi-Cache"
+    cache_status_header: str = "X-Fastapi-Cache",
     namespace: str = "",
     injected_dependency_namespace: str = "__fastapi_cache",
 ) -> Callable[[Callable[P, Awaitable[R]]], Callable[P, Awaitable[Union[R, Response]]]]:

@@ -88,6 +88,7 @@ def cache(
     expire: Optional[int] = None,
     coder: Optional[Type[Coder]] = None,
     key_builder: Optional[KeyBuilder] = None,
+    cache_status_header: str = "X-Fastapi-Cache"
     namespace: str = "",
     injected_dependency_namespace: str = "__fastapi_cache",
 ) -> Callable[[Callable[P, Awaitable[R]]], Callable[P, Awaitable[Union[R, Response]]]]:
@@ -98,6 +99,7 @@ def cache(
     :param expire:
     :param coder:
     :param key_builder:
+    :param cache_status_header:
 
     :return:
     """
@@ -128,6 +130,7 @@ def cache(
             nonlocal coder
             nonlocal expire
             nonlocal key_builder
+            nonlocal cache_status_header
 
             async def ensure_async_func(*args: P.args, **kwargs: P.kwargs) -> R:
                 """Run cached sync functions in thread pool just like FastAPI."""
@@ -160,7 +163,7 @@ def cache(
             expire = expire or FastAPICache.get_expire()
             key_builder = key_builder or FastAPICache.get_key_builder()
             backend = FastAPICache.get_backend()
-            cache_status_header = FastAPICache.get_cache_status_header()
+            cache_status_header = cache_status_header or FastAPICache.get_cache_status_header()
 
             cache_key = key_builder(
                 func,

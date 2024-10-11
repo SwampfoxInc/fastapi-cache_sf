@@ -205,8 +205,8 @@ def cache(
                             "ETag": f"W/{hash(to_cache)}",
                             cache_status_header: "MISS",
                         }
-                        response.headers[cache_status_header] = "MISS"
                     )
+                    response.headers[cache_status_header] = "MISS"
 
             else:  # cache hit
                 if response:
@@ -217,9 +217,8 @@ def cache(
                             "ETag": etag,
                             cache_status_header: "HIT",
                         }
-                    response.headers[cache_status_header] = "HIT"
                     )
-
+                    response.headers[cache_status_header] = "HIT"
                     if_none_match = request and request.headers.get("if-none-match")
                     if if_none_match == etag:
                         response.status_code = HTTP_304_NOT_MODIFIED

@@ -88,7 +88,7 @@ def cache(
     expire: Optional[int] = None,
     coder: Optional[Type[Coder]] = None,
     key_builder: Optional[KeyBuilder] = None,
-    cache_status_header: str = "X-Fastapi-Cache",
+    cache_status_header: str = "X-FastAPI-Cache",
     namespace: str = "",
     injected_dependency_namespace: str = "__fastapi_cache",
 ) -> Callable[[Callable[P, Awaitable[R]]], Callable[P, Awaitable[Union[R, Response]]]]:
@@ -205,6 +205,7 @@ def cache(
                             "ETag": f"W/{hash(to_cache)}",
                             cache_status_header: "MISS",
                         }
+                        response.headers[cache_status_header] = "MISS"
                     )
 
             else:  # cache hit
@@ -216,6 +217,7 @@ def cache(
                             "ETag": etag,
                             cache_status_header: "HIT",
                         }
+                    response.headers[cache_status_header] = "HIT"
                     )
 
                     if_none_match = request and request.headers.get("if-none-match")
